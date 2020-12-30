@@ -1,0 +1,15 @@
+artifact_uri: file:///home/anish/lf_project/url_qa/mlruns/0/19fe9cbb6d9c41eb8bb6fbe14256f2d3/artifacts
+end_time: 1609242947182
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+name: ''
+run_id: 19fe9cbb6d9c41eb8bb6fbe14256f2d3
+run_uuid: 19fe9cbb6d9c41eb8bb6fbe14256f2d3
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1609242511480
+status: 3
+tags: []
+user_id: anish
