@@ -6,15 +6,14 @@ from glob import glob
 import subprocess
 import streamlit as st
 from pytube import YouTube
-import pdb
 
 import dask
-from utils import split_into_batches, prepare_model_input, read_batch, init_jit_model, Decoder
+from .utils import prepare_model_input, read_batch, Decoder
 
 # @st.cache
 def load_model():
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-    model = torch.jit.load("../silero-model/sst_model.pt", map_location=device)
+    model = torch.jit.load("silero-model/sst_model.pt", map_location=device)
     decoder = Decoder(model.labels)
     return model, decoder, device
 
@@ -51,6 +50,4 @@ def extract_text(video_url="https://www.youtube.com/watch?v=WVPcKah4CbA", video_
     text = dask.compute(*predictions)[0]
     return text
     
-text = extract_text()
-pdb.set_trace()
     
