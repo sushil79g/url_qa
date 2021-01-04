@@ -30,18 +30,22 @@ def qna(text, nlp):
 
 st.title("YOUtube Question Answering: Awesome project")
 st.write("Making Speech to text model ready...")
-model_name="deepset/roberta-base-squad2"
-model, decoder, utils, device = load_model()
-st.write("Initializing the question answering model")
-if device == "gpu":
-    nlp = Inferencer.load(model_name, task_type="question_answering", gpu=True)
-else:
-    nlp = Inferencer.load(model_name, task_type="question_answering", gpu=False)
+model, decoder, device = load_model()
+st.write("SST model loading complete")
+time.sleep(3)
+st.write("Extract Text from Speech")
 title = st.text_input('YOutube video link', "")
 if not title:
     st.stop()
 name = re.sub(r'[^\w\s]','_',title)+".wav"
-text = extract_text(model, decoder, utils, device, title, name)
+text = extract_text(title, name)
 time.sleep(3)
-st.text("Downloading the video and extracting the text")
+st.text("Downloading the video and extracting the text Completed")
+model_name="deepset/roberta-base-squad2"
+st.text("Load Q aand A model")
+if device == "gpu":
+    nlp = Inferencer.load(model_name, task_type="question_answering", gpu=True)
+else:
+    nlp = Inferencer.load(model_name, task_type="question_answering", gpu=False)
+st.text("Ask Me Anything")
 answer = qna(text, nlp)
