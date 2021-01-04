@@ -33,7 +33,10 @@ st.write("Making Speech to text model ready...")
 model_name="deepset/roberta-base-squad2"
 model, decoder, utils, device = load_model()
 st.write("Initializing the question answering model")
-nlp = Inferencer.load(model_name, task_type="question_answering")
+if device == "gpu":
+    nlp = Inferencer.load(model_name, task_type="question_answering", gpu=True)
+else:
+    nlp = Inferencer.load(model_name, task_type="question_answering", gpu=False)
 title = st.text_input('YOutube video link', "")
 if not title:
     st.stop()
