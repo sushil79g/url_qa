@@ -4,8 +4,7 @@ from farm.infer import Inferencer
 from pprint import pprint
 # from IPython.display import clear_output
 
-def answer_ques(context, question, model_name="deepset/roberta-base-squad2"):
-    nlp = Inferencer.load(model_name, task_type="question_answering")
+def answer_ques(context, question, nlp):
     if isinstance(question, str):
         question = [question]
     qa_input = [{"questions": question,
