@@ -6,15 +6,25 @@ from glob import glob
 import subprocess
 import streamlit as st
 from pytube import YouTube
- 
+import pdb
+
+import dask
+from utils import split_into_batches, prepare_model_input, read_batch, init_jit_model, Decoder
+
 # @st.cache
 def load_model():
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-    model, decoder, utils = torch.hub.load(repo_or_dir='snakers4/silero-models',
-                                        model='silero_stt',
-                                        language='en', 
-                                        device=device)
-    return model, decoder, utils, device
+    model = torch.jit.load("../silero-model/sst_model.pt", map_location=device)
+    decoder = Decoder(model.labels)
+    return model, decoder, device
+
+@dask.delayed
+def predict(input_batch, model, decoder):
+    with torch.no_grad():
+        out = model(input_batch)
+        for example in out:
+            text = decoder(example.cpu())
+    return text
 
 # @st.cache
 def download_wav_file(video_url, video_name, video_path):
@@ -30,18 +40,17 @@ def download_wav_file(video_url, video_name, video_path):
 
 
 
-def extract_text( model, decoder, utils, device,  video_url="https://www.youtube.com/watch?v=WVPcKah4CbA", video_name="abc.wav", video_path="../dataset/"):
-    # model, decoder, utils, device = load_model()
+def extract_text(video_url="https://www.youtube.com/watch?v=WVPcKah4CbA", video_name="abc.wav", video_path="../dataset/"):
+    model, decoder, device = load_model()
     new_filepath = os.path.join(video_path, video_name)
     if not os.path.exists("../dataset/"+video_name):
         new_filepath = download_wav_file(video_url, video_name, video_path)
-    (read_batch, split_into_batches, _ , prepare_model_input) = utils
-    test_files = glob(new_filepath)
-    batches = split_into_batches(test_files, batch_size=1)
-    input_set = prepare_model_input(read_batch(batches[0]),device=device)
-    output_set = model(input_set)
-    for example in output_set:
-        text = decoder(example.cpu())
+    input_set = prepare_model_input(read_batch([new_filepath]),device=device)
+    dmodel = dask.delayed(model.cpu())
+    predictions = [predict(input_set, dmodel, decoder)]
+    text = dask.compute(*predictions)[0]
     return text
-
-
+    
+text = extract_text()
+pdb.set_trace()
+    
