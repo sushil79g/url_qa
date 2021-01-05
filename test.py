@@ -30,15 +30,15 @@ def qna(text, nlp):
 
 st.title("YOUtube Question Answering: Awesome project")
 st.write("Making Speech to text model ready...")
-model, decoder, device = load_model()
+model, decoder, device = load_model(model_path="silero-model", model_name="sst_model.pt")
 st.write("SST model loading complete")
 time.sleep(3)
 st.write("Extract Text from Speech")
 title = st.text_input('YOutube video link', "")
 if not title:
     st.stop()
-name = re.sub(r'[^\w\s]','_',title)+".wav"
-text = extract_text(title, name)
+# name = re.sub(r'[^\w\s]','_',title)+".wav"
+text = extract_text(title)
 time.sleep(3)
 st.text("Downloading the video and extracting the text Completed")
 model_name="deepset/roberta-base-squad2"
