@@ -5,14 +5,14 @@ from glob import glob
 
 import os
 import subprocess
-# import streamlit as st
+import streamlit as st
 from pytube import YouTube
 import gdown
 import dask
 from .third_party.utils import prepare_model_input, read_batch, Decoder
 
 
-# @st.cache
+@st.cache(suppress_st_warning=True)
 def load_model(model_path, model_name):
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     if not os.path.exists(os.path.join(model_path,model_name)):
@@ -48,7 +48,7 @@ def download_wav_file(video_url, video_path, video_name):
     return os.path.join(video_path, video_name)
 
 
-
+@st.cache(suppress_st_warning=True) 
 def extract_text(video_url="https://www.youtube.com/watch?v=WVPcKah4CbA", video_path="dataset", video_name="abc.wav", model_path="silero-model", model_name="sst_model.pt"):
     model, decoder, device = load_model(model_path, model_name)
     new_filepath = os.path.join(video_path, video_name)
