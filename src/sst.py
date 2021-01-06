@@ -8,7 +8,7 @@ import subprocess
 import streamlit as st
 from pytube import YouTube
 import gdown
-import toolz
+import pdb
 import dask
 from .third_party.utils import prepare_model_input, read_batch, Decoder
 
@@ -23,6 +23,7 @@ def load_model(model_path, model_name):
             os.mkdir(model_path)
         link = str(url)+str(file_id)
         gdown.download(link, os.path.join(model_path, model_name), quiet=False)
+    pdb.set_trace()
     model = torch.jit.load("../silero-model/sst_model.pt", map_location=device)
     
     decoder = Decoder(model.labels)
