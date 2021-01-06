@@ -2,6 +2,8 @@ import re
 import streamlit as st
 import time
 
+import pickle
+
 from src.sst import download_wav_file, extract_text, load_model
 from src.qna import answer_ques
 
@@ -31,14 +33,12 @@ st.title("YOUtube Question Answering: Awesome project")
 st.write("Making Speech to text model ready...")
 model, decoder, device = load_model(model_path="silero-model", model_name="sst_model.pt")
 st.write("SST model loading complete")
-time.sleep(3)
 st.write("Extract Text from Speech")
 title = st.text_input('YOutube video link', "")
 if not title:
     st.stop()
 # name = re.sub(r'[^\w\s]','_',title)+".wav"
 text = extract_text(title)
-time.sleep(3)
 st.text("Downloading the video and extracting the text Completed")
 model_name="deepset/roberta-base-squad2"
 st.text("Load Q aand A model")
@@ -46,5 +46,10 @@ if device == "gpu":
     nlp = Inferencer.load(model_name, task_type="question_answering", gpu=True)
 else:
     nlp = Inferencer.load(model_name, task_type="question_answering", gpu=False)
+with open("filename", 'wb') as f:
+    pickle.dump(text, f)
+del text
+with open("filename", "rb") as f:
+    defg = pickle.load(f)
 st.text("Ask Me Anything")
-qna(text, nlp)
+qna(defg, nlp)
