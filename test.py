@@ -20,13 +20,15 @@ from farm.infer import Inferencer
 #     st.write("successfully converted")
 #     return "i am speech to text"
 
-def qna(text, nlp):
+def qna(nlp):
     st.text("AI video reading complete")
+    with open("filename", "rb") as f:
+        extracted_text = pickle.load(f)
     question = st.text_input('Ask question related to video input', "")
     if not question:
         st.stop()
     st.write("analysing answer, Machine learning on work!")
-    answer = answer_ques(text, question, nlp)
+    answer = answer_ques(extracted_text, question, nlp)
     st.write("Answer is:::", answer)
 
 st.title("YOUtube Question Answering: Awesome project")
@@ -39,6 +41,10 @@ if not title:
     st.stop()
 # name = re.sub(r'[^\w\s]','_',title)+".wav"
 text = extract_text(title)
+with open("filename", 'wb') as f:
+    pickle.dump(text, f)
+del text
+print("Speech to text complete...")
 st.text("Downloading the video and extracting the text Completed")
 model_name="deepset/roberta-base-squad2"
 st.text("Load Q aand A model")
@@ -46,10 +52,7 @@ if device == "gpu":
     nlp = Inferencer.load(model_name, task_type="question_answering", gpu=True)
 else:
     nlp = Inferencer.load(model_name, task_type="question_answering", gpu=False)
-with open("filename", 'wb') as f:
-    pickle.dump(text, f)
-del text
-with open("filename", "rb") as f:
-    defg = pickle.load(f)
+
+
 st.text("Ask Me Anything")
-qna(defg, nlp)
+qna(nlp)
