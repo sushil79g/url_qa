@@ -1,5 +1,5 @@
 sst_model_dir : silero-model
 sst_model_name : sst_model.pt
 qna_model_dir : "deepset/roberta-base-squad2"
-video_dir :  "dataset"
-link_id :     linkID                             #Google drive link ID
+video_dir : "dataset"
+link_id : DRIVE-ID                            #Google drive link ID
