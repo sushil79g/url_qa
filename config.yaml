@@ -3,4 +3,3 @@ sst_model_name : sst_model.pt
 qna_model_dir : "deepset/roberta-base-squad2"
 video_dir :  "dataset"
 link_id :     linkID                             #Google drive link ID
-text_dir : "dataset/sst_output.txt"
