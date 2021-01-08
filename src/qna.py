@@ -1,9 +1,19 @@
+import torch
 from farm.modeling.adaptive_model import AdaptiveModel
 from farm.modeling.tokenization import Tokenizer
 from farm.infer import Inferencer
 from pprint import pprint
 # from IPython.display import clear_output
 
+def load_qna_model(model_dir):
+    if torch.cuda.is_available():
+        nlp = Inferencer.load(model_dir, task_type="question_answering", gpu=True)
+        nlp.save(model_dir)
+    else:
+        nlp = Inferencer.load(model_dir, task_type="question_answering", gpu=False)
+        nlp.save(model_dir)
+    return nlp
+    
 def answer_ques(context, question, nlp):
     if isinstance(question, str):
         question = [question]
