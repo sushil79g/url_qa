@@ -26,8 +26,7 @@ if sst_button.checkbox("Load & Run SST Model over data"):
         model_name=config_dict['sst_model_name'],
         video_url=url_link,
         video_dir=config_dict['video_dir'],
-        link_id= config_dict['link_id'],
-        text_dir=config_dict['text_dir']
+        link_id= config_dict['link_id']
     )
     st.info("SST Prediction complete")
 
