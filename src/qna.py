@@ -5,12 +5,12 @@ from farm.infer import Inferencer
 from pprint import pprint
 # from IPython.display import clear_output
 
-def filter_answer(answer=[]):
-    answer_prob = []
-    for ans in answer:
-        if  not ans['answer']=="no_answer":
-            answer_prob.append(ans['answer'])
-    return answer_prob
+# def filter_answer(answer=[]):
+#     answer_prob = []
+#     for ans in answer:
+#         if  not ans['answer']=="no_answer":
+#             answer_prob.append(ans['answer'])
+#     return answer_prob
 
 def load_qna_model(model_dir):
     if torch.cuda.is_available():
@@ -30,8 +30,8 @@ def answer_ques(context, question, nlp):
     res = nlp.inference_from_dicts(dicts=qa_input)
     # for item in res[0]['predictions'][0]['answers']:
     #     print(item['answer'])
-    result = filter_answer(res[0]['predictions'][0]['answers'])
-    return result
+    # result = filter_answer(res[0]['predictions'][0]['answers'])
+    return res
 
 # answer_ques(
 #     context= """Nepal, the landlocked multiethnic, multilingual, multi-religious country, is situated north of India in the Himalayas, in the region where, about 40 to 50 million years ago, the Indian subcontinent has crashed into Asia. Because of that accident, Nepal has some of the world's highest mountains including Sagarmatha (Mt. Everest, 8848m, which it shares with Tibet (by now a province of China). The highest mountain on Earth is towering above populated valleys and forested plains.
