@@ -22,6 +22,7 @@ def load_sst_model(model_dir, model_name,link_id):
             os.mkdir(model_dir)
         link = str(url)+str(link_id)
         gdown.download(link, os.path.join(model_dir, model_name), quiet=False)
+    import pdb; pdb.set_trace()
     model = torch.jit.load(os.path.join(model_dir,model_name), map_location=device)
     
     decoder = Decoder(model.labels)
