@@ -10,9 +10,9 @@ def filter_answer(answer=[]):
     total = 0
     for ans in answer:
         if  not ans['answer']=="no_answer":
-            answer_prob.append(ans['answer'], ans['score'])
+            answer_prob.append((ans['answer'], ans['score']))
             total = total + ans['score']
-    answer_prob = [round(answer[1]/total, 2) for answer in answer_prob]
+    answer_prob = [(answer[0], round(answer[1]/total, 2)) for answer in answer_prob]
     return answer_prob
 
 def load_qna_model(model_dir):
