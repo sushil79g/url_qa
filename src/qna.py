@@ -5,12 +5,15 @@ from farm.infer import Inferencer
 from pprint import pprint
 # from IPython.display import clear_output
 
-# def filter_answer(answer=[]):
-#     answer_prob = []
-#     for ans in answer:
-#         if  not ans['answer']=="no_answer":
-#             answer_prob.append(ans['answer'])
-#     return answer_prob
+def filter_answer(answer=[]):
+    answer_prob = []
+    total = 0
+    for ans in answer:
+        if  not ans['answer']=="no_answer":
+            answer_prob.append(ans['answer'], ans['score'])
+            total = total + ans['score']
+    answer_prob = [round(answer[1]/total, 2) for answer in answer_prob]
+    return answer_prob
 
 def load_qna_model(model_dir):
     if torch.cuda.is_available():
@@ -30,7 +33,7 @@ def answer_ques(context, question, nlp):
     res = nlp.inference_from_dicts(dicts=qa_input)
     # for item in res[0]['predictions'][0]['answers']:
     #     print(item['answer'])
-    # result = filter_answer(res[0]['predictions'][0]['answers'])
+    result = filter_answer(res[0]['predictions'][0]['answers'])
     return res
 
 # answer_ques(
