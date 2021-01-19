@@ -9,12 +9,14 @@ from sklearn.preprocessing import normalize
 
 def filter_answer(answer=[]):
     answer_prob = []
-    score = []
+    total = 0
     for ans in answer:
         if  not ans['answer']=="no_answer":
-            answer_prob.append(ans['answer'])
-            score.append(ans['score'])
-    return answer_prob, np.array(score)
+            answer_prob.append((ans['answer'], ans['score']))
+            total = total + ans['score']
+    answer_prob = [(answer[0], round(answer[1]/total, 2)) for answer in answer_prob]
+    return answer_prob
+
 
 def load_qna_model(model_dir):
     if torch.cuda.is_available():
@@ -32,8 +34,9 @@ def answer_ques(context, question, nlp):
     qa_input = [{"questions": question,
                 "text": context}]
     res = nlp.inference_from_dicts(dicts=qa_input)
-    result,score = filter_answer(res[0]['predictions'][0]['answers'])
-    return result, score
+    result = filter_answer(res[0]['predictions'][0]['answers'])
+    return res
+
 # answer_ques(
 #     context= """Nepal, the landlocked multiethnic, multilingual, multi-religious country, is situated north of India in the Himalayas, in the region where, about 40 to 50 million years ago, the Indian subcontinent has crashed into Asia. Because of that accident, Nepal has some of the world's highest mountains including Sagarmatha (Mt. Everest, 8848m, which it shares with Tibet (by now a province of China). The highest mountain on Earth is towering above populated valleys and forested plains.
 # Somewhere here in the Kapilavastu district, there is a place called Lumbini where in about 500 B.C.E. Queen Mayadevi is said to have given birth to Siddhartha Gautama, better known as Buddha.
