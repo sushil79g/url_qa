@@ -1,5 +1,7 @@
 import yaml
 import streamlit as st
+import pandas as pd
+import altair as alt
 from src.sst import extract_text
 from src.qna import load_qna_model, answer_ques
 
@@ -35,7 +37,14 @@ if qna_button.checkbox("Load QNA Model & Ask Me anything"):
     if st.info("QNA model loading Completed"):
         question = st.text_input('Ask question related to video input', "")
         if question:
-            answer = answer_ques(sst_text, question, model_qna)
+            answer, score = answer_ques(sst_text, question, model_qna)
+            df = pd.DataFrame(answer, columns=['answer'])
+            df['score'] = score
+            df.sort_values(by=['score'])
             if answer:
-                st.write("Answer is:::", answer)
+                st.write("Answer is:::", df)
+                chart = alt.Chart(df).mark_bar().encode(
+                    y=alt.Y('answer', sort='-x'),
+                    x='score').properties( width=500, height=500)
+                st.write("", "", chart)
 

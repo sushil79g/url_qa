@@ -3,6 +3,8 @@ from farm.modeling.adaptive_model import AdaptiveModel
 from farm.modeling.tokenization import Tokenizer
 from farm.infer import Inferencer
 from pprint import pprint
+import numpy as np
+from sklearn.preprocessing import normalize
 # from IPython.display import clear_output
 
 def filter_answer(answer=[]):
@@ -14,6 +16,7 @@ def filter_answer(answer=[]):
             total = total + ans['score']
     answer_prob = [(answer[0], round(answer[1]/total, 2)) for answer in answer_prob]
     return answer_prob
+
 
 def load_qna_model(model_dir):
     if torch.cuda.is_available():
@@ -31,8 +34,6 @@ def answer_ques(context, question, nlp):
     qa_input = [{"questions": question,
                 "text": context}]
     res = nlp.inference_from_dicts(dicts=qa_input)
-    # for item in res[0]['predictions'][0]['answers']:
-    #     print(item['answer'])
     result = filter_answer(res[0]['predictions'][0]['answers'])
     return res
 
